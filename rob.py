@@ -147,7 +147,7 @@ class Rob_Lessons(login.httpmthd):
                     if response.json()['flag'] != '1':
                         print('[*]Thread-'+no+'  异常!')
                         print('[*]异常状态码: '+response.json()['msg'])
-                        return
+                        raise Exception
                     print('[*]Thread-'+no+'  Success!')
                     print('[*]'+self.kcmc+'  抢课成功!')
                     print('[*]程序即将退出...')
