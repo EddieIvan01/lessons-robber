@@ -1,7 +1,7 @@
 ## CUMT多线程公选课抢课脚本
 
 **Demo**
-![](https://upload-images.jianshu.io/upload_images/11356161-d471aee3182aba99.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://github.com/EddieIvan01/Lessons_Robber/blob/master/Demo.jpg)
 
 ***
 
