@@ -32,6 +32,7 @@ e.g.
 
 ![](https://upload-images.jianshu.io/upload_images/11356161-96e12173538f401a.gif?imageMogr2/auto-orient/strip)
 
+如果有服务器可以使用nohup指令挂载到服务器上，`nohup ./rob.py&`
 
 ***
 
@@ -40,3 +41,5 @@ P.s. 部分post变量代号还不清楚，程序可能不具有不同学院不�
 ***
 
 2018/7/8 16.26   长时间监控时Cookie过期问题已修复
+
+2018/7/8 20.34   发现校园网及移动宽带会出现获取课程信息失败，因为post到搜索页面失败，联通流量网络正常。东京的VPS也失败。
