@@ -12,7 +12,7 @@
 + 修改config.json，填入教务系统用户名，密码，与欲选课程代号，
 e.g.
 
-![](https://upload-images.jianshu.io/upload_images/11356161-21370b83941839d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://github.com/EddieIvan01/Lessons_Robber/blob/master/123123.png)
 
 + 启动程序，输入启动的线程数。设定只能小于8（为学校的土豆服务器考虑）
 
