@@ -18,5 +18,12 @@ e.g.
 
 ***
 
+对于无余量的课程，可以挂在电脑上，持续监控，大概是这样的画面
+![](https://upload-images.jianshu.io/upload_images/11356161-96e12173538f401a.gif?imageMogr2/auto-orient/strip)
+
+长时间监控可能会有Cookie过期问题，写了针对代码，但未试验，暂时不能保证长时间监控不会出Bug
+
+***
+
 P.s. 部分post变量代号还不清楚，程序可能不具有不同学院不同年级的普适性。如有疑问，请联系whoami9894@gmail.com
 
