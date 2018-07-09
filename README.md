@@ -7,6 +7,8 @@
 
 **How To Use**
 
++ 安装依赖包：`pip install -r requirements.txt`
+
 + 下载本仓库文件与[CUMT教务系统模拟登录](https://github.com/EddieIvan01/Analog_Login)文件置于与同一文件夹下
 
 + 修改config.json，填入教务系统用户名，密码，与欲选课程代号，
