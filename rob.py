@@ -18,8 +18,8 @@ def logging(foo):
 
 class Rob_Lessons(login.httpmthd):
     
-    def __init__(self, user, passwd,lesson_id):
-        super().__init__(user,passwd)
+    def __init__(self, user, passwd, lesson_id):
+        super().__init__(user, passwd)
         self.lesson_id = lesson_id
         self.header_1 = {
             'Accept':'text/html,application/xhtml+xm…plication/xml;q=0.9,*/*;q=0.8',	
@@ -53,7 +53,7 @@ class Rob_Lessons(login.httpmthd):
             search_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbPartDisplay.html?gnmkdm=N253512&su='+self.user
             choose_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxJxbWithKchZzxkYzb.html?gnmkdm=N253512&su='+self.user
             rob_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su='+self.user
-            text = BeautifulSoup(login.httpmthd.sessions.get(index_url,headers = self.header_1).text,"html.parser")
+            text = BeautifulSoup(login.httpmthd.sessions.get(index_url, headers = self.header_1).text, "html.parser")
             xkkz = text.findAll(name='input', attrs={'type':"hidden",'name':"firstXkkzId",'id':"firstXkkzId"})[0].attrs['value']
             data = {
                 'bh_id':'161031108',
@@ -89,7 +89,7 @@ class Rob_Lessons(login.httpmthd):
                 'zyfx_id':'wfx',
                 'zyh_id':'0311'         
             }
-            search_result = requests.post(search_url,data = data,headers = self.header_2).json()
+            search_result = requests.post(search_url, data = data, headers = self.header_2).json()
             kch = search_result['tmpList'][0]['kch_id']
             jxb = search_result['tmpList'][0]['jxb_id']
             kcmc = search_result['tmpList'][0]['kcmc']
@@ -122,21 +122,21 @@ class Rob_Lessons(login.httpmthd):
             
             
     def _get_csrftoken(self):                   
-        url = 'http://202.119.206.62/jwglxt/xtgl/login_slogin.html?language=zh_CN&_t='+str(self.time)
+        url = 'http://202.119.206.62/jwglxt/xtgl/login_slogin.html?language=zh_CN&_t=' + str(self.time)
         r = requests.get(url)
         r.encoding = r.apparent_encoding
-        soup = BeautifulSoup(r.text,'html.parser')
-        self.token = soup.find('input',attrs={'id':'csrftoken'}).attrs['value'] 
+        soup = BeautifulSoup(r.text, 'html.parser')
+        self.token = soup.find('input', attrs={'id':'csrftoken'}).attrs['value'] 
         
         
-    def lessons(self,no):
+    def lessons(self, no):
         global THREAD_FLAG
-        url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su='+self.user
+        url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su=' + self.user
         print('[*]Thread-'+no+' Start')
         while True:
             if THREAD_FLAG:
                 try:
-                    response = requests.post(url,data = self.rob_data,headers = self.header_2,timeout = 5)
+                    response = requests.post(url, data = self.rob_data, headers = self.header_2, timeout = 5)
                     if len(response.text) > 10000:
                         #self.reflush_time()
                         #self.get_public()
@@ -163,7 +163,7 @@ class Rob_Lessons(login.httpmthd):
     def generate_thread(self,count):
         self.thread=[]
         for i in range(count):
-            self.thread.append(threading.Thread(target=self.lessons,args=(str(i+1),)))      
+            self.thread.append(threading.Thread(target=self.lessons, args=(str(i+1),)))      
     
     @logging
     def login_us(self):
@@ -172,7 +172,7 @@ class Rob_Lessons(login.httpmthd):
         self.get_csrftoken()
         self.post_data()
         
-    def rob_it(self,count):
+    def rob_it(self, count):
         self.login_us()
         self.generate_thread(count)
         self.lessons_info()
@@ -182,9 +182,9 @@ class Rob_Lessons(login.httpmthd):
 def config():
     user_passwd = []
     try:
-        with open('config.json','r') as conf:
+        with open('config.json', 'r') as conf:
             data = json.load(conf)
-            return [data['user'].strip(),data['passwd'].strip(),data['lesson_id'].strip()]
+            return [data['user'].strip(), data['passwd'].strip(), data['lesson_id'].strip()]
     except:
         print('[*]Error')
         print('[*]请检查配置文件config.json')
@@ -208,5 +208,5 @@ if __name__ == '__main__':
         print('同学，为学校的服务器考虑一下...')
         sys.exit()
     user_config = config()
-    Robber = Rob_Lessons(user_config[0],user_config[1],user_config[2])
+    Robber = Rob_Lessons(user_config[0], user_config[1], user_config[2])
     Robber.rob_it(MAX_PROCESS)
