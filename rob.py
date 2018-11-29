@@ -16,7 +16,7 @@ def logging(foo):
         print('[*]启动线程中...')
     return wrapper
 
-class Rob_Lessons(login.httpmthd):
+class Rob_Lessons(login.Loginer):
     
     def __init__(self, user, passwd, lesson_id):
         super().__init__(user, passwd)
