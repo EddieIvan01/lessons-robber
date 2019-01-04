@@ -184,7 +184,7 @@ def config():
     try:
         with open('config.json', 'r') as conf:
             data = json.load(conf)
-            return [data['user'].strip(), data['passwd'].strip(), data['lesson_id'].strip()]
+            return (data['user'].strip(), data['passwd'].strip(), data['lesson_id'].strip())
     except:
         print('[*]Error')
         print('[*]请检查配置文件config.json')
