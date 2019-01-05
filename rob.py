@@ -1,32 +1,37 @@
-import login
+from login import Loginer
 import threading
 import json
 import sys
 import time
 from bs4 import BeautifulSoup
 import requests
+import time
+
+
 
 THREAD_FLAG = True
+MAX_PROCESS = 4
 
 def logging(foo):
     def wrapper(*args):
-        print('[*]尝试登录中...')
+        print('[+]尝试登录中...')
         foo(*args)
-        print('[*]登录成功!')
-        print('[*]启动线程中...')
+        print('[+]登录成功!')
+        print('[+]启动线程中...')
     return wrapper
 
-class Rob_Lessons(login.Loginer):
+logtime = lambda: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())    
+    
+class Rob_Lessons(Loginer):
     
     def __init__(self, user, passwd, lesson_id):
         super().__init__(user, passwd)
         self.lesson_id = lesson_id
         self.header_1 = {
-            'Accept':'text/html,application/xhtml+xm…plication/xml;q=0.9,*/*;q=0.8',	
+            'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',	
             'Accept-Encoding':'gzip, deflate',
             'Accept-Language':'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
             'Connection':'keep-alive',
-            'Content-Length':'470',
             'Content-Type':'application/x-www-form-urlencoded',
             'Host':'202.119.206.62',
             'Referer':'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html?gnmkdm=N253512&layout=default&su='+self.user,
@@ -47,14 +52,22 @@ class Rob_Lessons(login.Loginer):
             'X-Requested-With':	'XMLHttpRequest',
             'Cookie':self.cookie
         }                 
-        print('[*]尝试获取课程信息...')
+        print('[+]尝试获取课程信息...')
         try:
             index_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html?gnmkdm=N253512&layout=default&su='+self.user
             search_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbPartDisplay.html?gnmkdm=N253512&su='+self.user
             choose_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxJxbWithKchZzxkYzb.html?gnmkdm=N253512&su='+self.user
             rob_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su='+self.user
-            text = BeautifulSoup(login.httpmthd.sessions.get(index_url, headers = self.header_1).text, "html.parser")
-            xkkz = text.findAll(name='input', attrs={'type':"hidden",'name':"firstXkkzId",'id':"firstXkkzId"})[0].attrs['value']
+            response = self.sessions.get(index_url, headers=self.header_1)
+            if "当前不属于选课阶段" in response.text:
+                print('[!]未到选课时间')
+                sys.exit()
+            text = BeautifulSoup(response.text, "html.parser")
+            xkkz = text.findAll(name='input', attrs={
+                                                'type':"hidden",
+                                                'name':"firstXkkzId",
+                                                'id':"firstXkkzId"
+                                              })[0].attrs['value']
             data = {
                 'bh_id':'161031108',
                 'bklx_id':'0',
@@ -89,7 +102,7 @@ class Rob_Lessons(login.Loginer):
                 'zyfx_id':'wfx',
                 'zyh_id':'0311'         
             }
-            search_result = requests.post(search_url, data = data, headers = self.header_2).json()
+            search_result = requests.post(search_url, data=data, headers=self.header_2).json()
             kch = search_result['tmpList'][0]['kch_id']
             jxb = search_result['tmpList'][0]['jxb_id']
             kcmc = search_result['tmpList'][0]['kcmc']
@@ -115,9 +128,11 @@ class Rob_Lessons(login.Loginer):
                 'xxkbj':'0',
                 'zyh_id':'0311'        
             }
-            print('[*]课程信息获取成功!')
+            print('[+]课程信息获取成功!')
+        except SystemExit as se:
+            sys.exit()
         except:
-            print('[*]获取失败，请查验课程代号')
+            print('[+]获取失败，请查验课程代号')
             sys.exit()
             
             
@@ -142,6 +157,8 @@ class Rob_Lessons(login.Loginer):
                         #self.get_public()
                         #self._get_csrftoken()
                         #self.post_data()
+                        with open('relogin.txt', 'a') as logger:
+                            logger.write(logtime()+' relogin\n')
                         self.login_us()
                     print('[*]Thread-'+no+'  请求成功')
                     if response.json()['flag'] != '1':
@@ -203,10 +220,6 @@ def welcome():
     
 if __name__ == '__main__':
     welcome()
-    MAX_PROCESS = int(input("[*]Please Input The Count of Thread:(1-8) "))
-    if MAX_PROCESS > 8:
-        print('同学，为学校的服务器考虑一下...')
-        sys.exit()
     user_config = config()
     Robber = Rob_Lessons(user_config[0], user_config[1], user_config[2])
     Robber.rob_it(MAX_PROCESS)
