@@ -1,22 +1,34 @@
-from login import Loginer
 import threading
 import json
 import sys
 import time
-from bs4 import BeautifulSoup
 import requests
-import time
+
+from analoglogin.login import Loginer
+from bs4 import BeautifulSoup
+from os import _exit
 
 
 THREAD_FLAG = True
 MAX_PROCESS = 4
 
 def logging(foo):
-    def wrapper(*args):
-        print('[+]尝试登录中...')
+    def wrapper(*args, **kwargs):
+        print('[+]'+logtime()+' 尝试登录中...')
+        start = time.time()
         foo(*args)
-        print('[+]登录成功!')
-        print('[+]启动线程中...')
+        end = time.time()
+        duration = end - start
+        q = ""
+        if duration < 2:
+            q = "Good"
+        elif duration > 2 and duration < 10:
+            q = "Normal"
+        else:
+            q = "Bad"
+        print('[+]'+logtime()+' 登录成功!')
+        print('[+]'+logtime()+' 登录用时: '+str(duration)[:6]+'s, 网络质量: '+q)
+        print('[+]'+logtime()+' 启动线程中...')
     return wrapper
 
 logtime = lambda: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())    
@@ -52,7 +64,7 @@ class Rob_Lessons(Loginer):
             'X-Requested-With':	'XMLHttpRequest',
             'Cookie':self.cookie
         }                 
-        print('[+]尝试获取课程信息...')
+        print('[+]'+logtime()+' 尝试获取课程信息...')
         try:
             index_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html?gnmkdm=N253512&layout=default&su='+self.user
             search_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbPartDisplay.html?gnmkdm=N253512&su='+self.user
@@ -60,14 +72,15 @@ class Rob_Lessons(Loginer):
             rob_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su='+self.user
             response = self.sessions.get(index_url, headers=self.header_1)
             if "当前不属于选课阶段" in response.text:
-                print('[!]未到选课时间')
-                sys.exit()
+                print('[!]'+logtime()+' 未到选课时间')
+                _exit(-1)
             text = BeautifulSoup(response.text, "html.parser")
-            xkkz = text.findAll(name='input', attrs={
-                                                'type':"hidden",
-                                                'name':"firstXkkzId",
-                                                'id':"firstXkkzId"
-                                              })[0].attrs['value']
+            xkkz = text.findAll(name='input', 
+                    attrs={
+                        'type':"hidden",
+                        'name':"firstXkkzId",
+                         'id':"firstXkkzId"
+                    })[0].attrs['value']
             data = {
                 'bh_id':'161031108',
                 'bklx_id':'0',
@@ -128,12 +141,10 @@ class Rob_Lessons(Loginer):
                 'xxkbj':'0',
                 'zyh_id':'0311'        
             }
-            print('[+]课程信息获取成功!')
-        except SystemExit as se:
-            sys.exit()
+            print('[+]'+logtime()+' 课程信息获取成功!')
         except:
-            print('[+]获取失败，请查验课程代号')
-            sys.exit()
+            print('[+]'+logtime()+' 获取失败，请查验课程代号')
+            _exit(-1)
             
             
     def _get_csrftoken(self):                   
@@ -147,7 +158,7 @@ class Rob_Lessons(Loginer):
     def lessons(self, no):
         global THREAD_FLAG
         url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su=' + self.user
-        print('[*]Thread-'+no+' Start')
+        print('[+]'+logtime()+' Thread-'+no+' Start')
         while True:
             if THREAD_FLAG:
                 try:
@@ -160,21 +171,21 @@ class Rob_Lessons(Loginer):
                         with open('relogin.txt', 'a') as logger:
                             logger.write(logtime()+' relogin\n')
                         self.login_us()
-                    print('[*]Thread-'+no+'  请求成功')
+                    print('[*]'+logtime()+' Thread-'+no+'  请求成功')
                     if response.json()['flag'] != '1':
-                        print('[*]Thread-'+no+'  异常!')
-                        print('[*]异常状态码: '+response.json()['msg'])
+                        print('[*]'+logtime()+' Thread-'+no+'  异常!')
+                        print('[*]'+logtime()+' 异常状态码: '+response.json()['msg'])
                         raise Exception
-                    print('[*]Thread-'+no+'  Success!')
-                    print('[*]'+self.kcmc+'  抢课成功!')
-                    print('[*]程序即将退出...')
+                    print('[*]'+logtime()+' Thread-'+no+'  Success!')
+                    print('[*]'+logtime()+' '+self.kcmc+'  抢课成功!')
+                    print('[+]'+logtime()+' 程序即将退出...')
                     THREAD_FLAG = False
                 except KeyboardInterrupt:
-                    sys.exit()
+                    os._exit(-1)
                 except:
-                    print('[*]Thread-'+no+'  Fail')
+                    print('[*]'+logtime()+' Thread-'+no+'  Fail')
             else:
-                print('[*]Thread-'+no+' Close')
+                print('[+]'+logtime()+' Thread-'+no+' Close')
                 return
 
     def generate_thread(self,count):
@@ -196,7 +207,7 @@ class Rob_Lessons(Loginer):
         for pro in self.thread:
             pro.start()
 
-def config():
+def get_config():
     user_passwd = []
     try:
         with open('config.json', 'r') as conf:
@@ -207,7 +218,7 @@ def config():
         print('[*]请检查配置文件config.json')
         sys.exit()
 
-def welcome():
+def banner():
     print('')
     print(" _                                                 _              _             ___          ")
     print("|_)   _   |_     |    _    _   _   _   ._    _    |_   _   ._    /   | |  |\/|   |    _   ._ ")
@@ -219,7 +230,7 @@ def welcome():
     print('')
     
 if __name__ == '__main__':
-    welcome()
-    user_config = config()
-    Robber = Rob_Lessons(user_config[0], user_config[1], user_config[2])
+    banner()
+    user_config = get_config()
+    Robber = Rob_Lessons(*user_config)
     Robber.rob_it(MAX_PROCESS)
