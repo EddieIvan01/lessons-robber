@@ -1,6 +1,9 @@
 ## CUMT多线程公选课抢课脚本
 
-**Demo**
+
+
+#### Demo
+
 ![](https://upload-images.jianshu.io/upload_images/11356161-9d4ba3a89d6d8637.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ***
@@ -48,3 +51,5 @@ P.s. 部分post变量代号还不清楚，程序可能不具有不同学院不�
 2018/7/8 20.34   发现校园网及移动宽带会出现获取课程信息失败，服务器会返回400 Bad Request（大概是玄学），CSDN上有[同样的问题](https://bbs.csdn.net/topics/390131855)，可能是ISP线路问题导致丢包
 
 2018/7/8 23.58   已打包成exe文件，使用时将`config.json`与rob.exe放于同一文件夹下，启动exe文件即可
+
+2019/1/8 12.51   Hello, 又一个学期的抢课时间，新增异步I/O协程版抢课脚本（Beta版，未验证）
