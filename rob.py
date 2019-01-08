@@ -1,6 +1,5 @@
 import threading
 import json
-import sys
 import time
 import requests
 
@@ -16,7 +15,7 @@ def logging(foo):
     def wrapper(*args, **kwargs):
         print('[+]'+logtime()+' 尝试登录中...')
         start = time.time()
-        foo(*args)
+        foo(*args, **kwargs)
         end = time.time()
         duration = end - start
         q = ""
@@ -208,7 +207,6 @@ class Rob_Lessons(Loginer):
             pro.start()
 
 def get_config():
-    user_passwd = []
     try:
         with open('config.json', 'r') as conf:
             data = json.load(conf)
@@ -216,7 +214,7 @@ def get_config():
     except:
         print('[*]Error')
         print('[*]请检查配置文件config.json')
-        sys.exit()
+        _exit(-1)
 
 def banner():
     print('')
