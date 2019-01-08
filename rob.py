@@ -114,7 +114,8 @@ class Rob_Lessons(Loginer):
                 'zyfx_id':'wfx',
                 'zyh_id':'0311'         
             }
-            search_result = requests.post(search_url, data=data, headers=self.header_2).json()
+            search_result = requests.post(search_url, data=data, 
+                                          headers=self.header_2).json()
             kch = search_result['tmpList'][0]['kch_id']
             jxb = search_result['tmpList'][0]['jxb_id']
             kcmc = search_result['tmpList'][0]['kcmc']
@@ -161,7 +162,8 @@ class Rob_Lessons(Loginer):
         while True:
             if THREAD_FLAG:
                 try:
-                    response = requests.post(url, data = self.rob_data, headers = self.header_2, timeout = 5)
+                    response = requests.post(url, data=self.rob_data, 
+                                             headers=self.header_2, timeout=5)
                     if len(response.text) > 10000:
                         #self.reflush_time()
                         #self.get_public()
@@ -190,7 +192,8 @@ class Rob_Lessons(Loginer):
     def generate_thread(self,count):
         self.thread=[]
         for i in range(count):
-            self.thread.append(threading.Thread(target=self.lessons, args=(str(i+1),)))      
+            self.thread.append(threading.Thread(target=self.lessons, 
+                                                args=(str(i+1),)))      
     
     @logging
     def login_us(self):
@@ -210,8 +213,9 @@ def get_config():
     try:
         with open('config.json', 'r') as conf:
             data = json.load(conf)
-            return (data['user'].strip(), data['passwd'].strip(), data['lesson_id'].strip())
-    except:
+            return (data['user'].strip(), data['passwd'].strip(), 
+                    data['lesson_id'].strip())
+    except FileNotFoundError:
         print('[*]Error')
         print('[*]请检查配置文件config.json')
         _exit(-1)

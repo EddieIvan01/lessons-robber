@@ -122,7 +122,8 @@ class Rob_Lessons(Loginer):
                 'zyfx_id':'wfx',
                 'zyh_id':'0311'         
             }
-            search_result = requests.post(search_url, data=data, headers=self.header_2).json()
+            search_result = requests.post(search_url, data=data, 
+                                          headers=self.header_2).json()
             kch = search_result['tmpList'][0]['kch_id']
             jxb = search_result['tmpList'][0]['jxb_id']
             kcmc = search_result['tmpList'][0]['kcmc']
@@ -207,7 +208,8 @@ def get_config():
     try:
         with open('config.json', 'r') as conf:
             data = json.load(conf)
-            return (data['user'].strip(), data['passwd'].strip(), data['lesson_id'].strip())
+            return (data['user'].strip(), data['passwd'].strip(), 
+                    data['lesson_id'].strip())
     except FileNotFoundError:
         print('[*]Error')
         print('[*]请检查配置文件config.json')
