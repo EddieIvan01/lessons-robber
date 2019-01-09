@@ -31,7 +31,10 @@ def logging(foo):
     return wrapper
 
 logtime = lambda: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())    
-    
+
+current_month = lambda: datetime.datetime.now().month
+
+
     
 class Rob_Lessons(Loginer):
     
@@ -106,7 +109,7 @@ class Rob_Lessons(Loginer):
                 'xh_id':self.user,
                 'xkly':'0',
                 'xkxnm':'2018',
-                'xkxqm':'3',
+                'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
                 'xqh_id':'2',
                 'xsbj':'4294967296',
                 'xslbdm':'421',
@@ -136,7 +139,7 @@ class Rob_Lessons(Loginer):
                 'xkkz_id':xkkz,
                 'xklc':'1',
                 'xkxnm':'2018',
-                'xkxqm':'3',
+                'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
                 'xsbxfs':'0',
                 'xxkbj':'0',
                 'zyh_id':'0311'        
@@ -174,7 +177,7 @@ class Rob_Lessons(Loginer):
                         self.login_us()
                     print('[*]'+logtime()+' Thread-'+no+'  请求成功')
                     if response.json()['flag'] != '1':
-                        print('[*]'+logtime()+' Thread-'+no+'  异常!')
+                        #print('[*]'+logtime()+' Thread-'+no+'  异常!')
                         print('[*]'+logtime()+' 异常状态码: '+response.json()['msg'])
                         raise Exception
                     print('[*]'+logtime()+' Thread-'+no+'  Success!')

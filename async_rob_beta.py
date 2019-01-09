@@ -10,6 +10,7 @@ import time
 import requests
 import asyncio
 import aiohttp
+import datetime
 
 from analoglogin.login import Loginer
 from bs4 import BeautifulSoup
@@ -23,7 +24,7 @@ def logging(foo):
     def wrapper(*args, **kwargs):
         print('[+]'+logtime()+' 尝试登录中...')
         start = time.time()
-        foo(*args)
+        foo(*args, **kwargs)
         end = time.time()
         duration = end - start
         q = ""
@@ -40,6 +41,9 @@ def logging(foo):
 
 logtime = lambda: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())    
     
+current_month = lambda: datetime.datetime.now().month
+
+
     
 class Rob_Lessons(Loginer):
     
@@ -89,17 +93,17 @@ class Rob_Lessons(Loginer):
                          'id':"firstXkkzId"
                     })[0].attrs['value']
             data = {
-                'bh_id':'161031108',
+                'bh_id':'151084001',  
                 'bklx_id':'0',
                 'ccdm':'3',
                 'filter_list[0]':self.lesson_id,
-                'jg_id':'03',
+                'jg_id':'08', 
                 'jspage':'10',
                 'kkbk':'0',
                 'kkbkdj':'0',
                 'kklxdm':'10',
                 'kspage':'1',
-                'njdm_id':'2016',
+                'njdm_id':'2015', 
                 'njdmzyh':' ',
                 'rwlx':'2',
                 'sfkcfx':'0',
@@ -114,7 +118,7 @@ class Rob_Lessons(Loginer):
                 'xh_id':self.user,
                 'xkly':'0',
                 'xkxnm':'2018',
-                'xkxqm':'3',
+                'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
                 'xqh_id':'2',
                 'xsbj':'4294967296',
                 'xslbdm':'421',
@@ -144,7 +148,7 @@ class Rob_Lessons(Loginer):
                 'xkkz_id':xkkz,
                 'xklc':'1',
                 'xkxnm':'2018',
-                'xkxqm':'3',
+                'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
                 'xsbxfs':'0',
                 'xxkbj':'0',
                 'zyh_id':'0311'        
@@ -174,7 +178,7 @@ class Rob_Lessons(Loginer):
                         data = await resp.json()
                         print('[*]'+logtime()+' Coroutine-'+no+'  请求成功')
                         if data['flag'] != '1':
-                            print('[*]'+logtime()+' Coroutine-'+no+'  异常!')
+                            #print('[*]'+logtime()+' Coroutine-'+no+'  异常!')
                             print('[*]'+logtime()+' 异常状态码: '+data['msg'])
                             raise Exception
                         print('[*]'+logtime()+' Coroutine-'+no+'  Success!')
