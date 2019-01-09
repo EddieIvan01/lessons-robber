@@ -2,6 +2,8 @@
 
 ### NOTICE!!!
 
+2019/1/8 Add co-routine asynchronous I/O version, it has better performance with fewer resource
+
 2019/1/9 已验证具有不同年级不同专业的普适性，可放心使用
 
 抢课有几率出现`课程代号错误，请查验课程代号`，如果您确保课程代号无误，那么是教务系统`Cookie`的*Bug*，请使用浏览器手动登录一次教务系统，再运行程序抢课
@@ -55,5 +57,3 @@ P.s. 部分post变量代号还不清楚，程序可能不具有不同学院不�
 2018/7/8 20.34   发现校园网及移动宽带会出现获取课程信息失败，服务器会返回400 Bad Request（大概是玄学），CSDN上有[同样的问题](https://bbs.csdn.net/topics/390131855)，可能是ISP线路问题导致丢包
 
 2018/7/8 23.58   已打包成exe文件，使用时将`config.json`与rob.exe放于同一文件夹下，启动exe文件即可
-
-2019/1/8 12.51   Hello, 又一个学期的抢课时间，新增异步I/O协程版抢课脚本（Beta版，未验证）
