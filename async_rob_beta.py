@@ -85,17 +85,17 @@ class Rob_Lessons(Loginer):
             if "当前不属于选课阶段" in response.text:
                 print('[!]'+logtime()+' 未到选课时间')
                 _exit(-1)
-            """
-            text = BeautifulSoup(response.text, "html.parser")
-            xkkz = text.findAll(name='input', 
-                    attrs={
-                        'type':"hidden",
-                        'name':"firstXkkzId",
-                         'id':"firstXkkzId"
-                    })[0].attrs['value']
-            """
-            xkkz = re.findall("onclick=\"queryCourse\(this,'10','([0-9A-F]{32})'\)\" role=\"tab\" data-toggle=\"tab\">通识选修课", 
-                response.text)[0]
+            try:
+                xkkz = re.findall("onclick=\"queryCourse\(this,'10','([0-9A-F]{32})'\)\" role=\"tab\" data-toggle=\"tab\">通识选修课", 
+                    response.text)[0]
+            except:
+                text = BeautifulSoup(response.text, "html.parser")
+                xkkz = text.findAll(name='input', 
+                        attrs={
+                            'type':"hidden",
+                            'name':"firstXkkzId",
+                             'id':"firstXkkzId"
+                        })[0].attrs['value']
             data = {
                 'bh_id':'151084001',  
                 'bklx_id':'0',

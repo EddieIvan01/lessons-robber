@@ -69,16 +69,19 @@ class Rob_Lessons(Loginer):
             'Cookie':self.cookie
         }                 
         print('[+]'+logtime()+' 尝试获取课程信息...')
+        #try:
+        index_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html?gnmkdm=N253512&layout=default&su='+self.user
+        search_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbPartDisplay.html?gnmkdm=N253512&su='+self.user
+        choose_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxJxbWithKchZzxkYzb.html?gnmkdm=N253512&su='+self.user
+        rob_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su='+self.user
+        response = self.sessions.get(index_url, headers=self.header_1)
+        if "当前不属于选课阶段" in response.text:
+            print('[!]'+logtime()+' 未到选课时间')
+            _exit(-1)
         try:
-            index_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html?gnmkdm=N253512&layout=default&su='+self.user
-            search_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbPartDisplay.html?gnmkdm=N253512&su='+self.user
-            choose_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_cxJxbWithKchZzxkYzb.html?gnmkdm=N253512&su='+self.user
-            rob_url = 'http://jwxt.cumt.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512&su='+self.user
-            response = self.sessions.get(index_url, headers=self.header_1)
-            if "当前不属于选课阶段" in response.text:
-                print('[!]'+logtime()+' 未到选课时间')
-                _exit(-1)
-            """
+            xkkz = re.findall("onclick=\"queryCourse\(this,'10','([0-9A-F]{32})'\)\" role=\"tab\" data-toggle=\"tab\">通识选修课", 
+                response.text)[0]
+        except:
             text = BeautifulSoup(response.text, "html.parser")
             xkkz = text.findAll(name='input', 
                     attrs={
@@ -86,74 +89,71 @@ class Rob_Lessons(Loginer):
                         'name':"firstXkkzId",
                          'id':"firstXkkzId"
                     })[0].attrs['value']
-            """
-            xkkz = re.findall("onclick=\"queryCourse\(this,'10','([0-9A-F]{32})'\)\" role=\"tab\" data-toggle=\"tab\">通识选修课", 
-                response.text)[0]
-            data = {
-                'bh_id':'161031108',
-                'bklx_id':'0',
-                'ccdm':'3',
-                'filter_list[0]':self.lesson_id,
-                'jg_id':'03',
-                'jspage':'10',
-                'kkbk':'0',
-                'kkbkdj':'0',
-                'kklxdm':'10',
-                'kspage':'1',
-                'njdm_id':'2016',
-                'njdmzyh':' ',
-                'rwlx':'2',
-                'sfkcfx':'0',
-                'sfkgbcx':'0',
-                'sfkknj':'0',
-                'sfkkzy':'0',
-                'sfkxq':'0',
-                'sfrxtgkcxd':'1',
-                'sfznkx':'0',
-                'tykczgxdcs':'10',
-                'xbm':'1',
-                'xh_id':self.user,
-                'xkly':'0',
-                'xkxnm':'2018',
-                'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
-                'xqh_id':'2',
-                'xsbj':'4294967296',
-                'xslbdm':'421',
-                'zdkxms':'0',
-                'zyfx_id':'wfx',
-                'zyh_id':'0311'         
-            }
-            search_result = requests.post(search_url, data=data, 
-                                          headers=self.header_2).json()
-            kch = search_result['tmpList'][0]['kch_id']
-            jxb = search_result['tmpList'][0]['jxb_id']
-            kcmc = search_result['tmpList'][0]['kcmc']
-            self.kcmc = kcmc
-            xf = search_result['tmpList'][0]['xf']
-            self.rob_data = {
-                'cxbj':'0',
-                'jxb_ids':jxb,
-                'kch_id':kch,
-                'kcmc':'('+self.lesson_id+')'+kcmc+'+-+'+xf+'学分',
-                'kklxdm':'10',
-                'njdm_id':'2016',
-                'qz':'0',
-                'rlkz':'1',
-                'rlzlkz':'0',
-                'rwlx':'2',
-                'sxbj':'1',
-                'xkkz_id':xkkz,
-                'xklc':'1',
-                'xkxnm':'2018',
-                'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
-                'xsbxfs':'0',
-                'xxkbj':'0',
-                'zyh_id':'0311'        
-            }
-            print('[+]'+logtime()+' 课程信息获取成功!')
-        except:
-            print('[+]'+logtime()+' 获取失败，请查验课程代号')
-            _exit(-1)
+        data = {
+            'bh_id':'161031108',
+            'bklx_id':'0',
+            'ccdm':'3',
+            'filter_list[0]':self.lesson_id,
+            'jg_id':'03',
+            'jspage':'10',
+            'kkbk':'0',
+            'kkbkdj':'0',
+            'kklxdm':'10',
+            'kspage':'1',
+            'njdm_id':'2016',
+            'njdmzyh':' ',
+            'rwlx':'2',
+            'sfkcfx':'0',
+            'sfkgbcx':'0',
+            'sfkknj':'0',
+            'sfkkzy':'0',
+            'sfkxq':'0',
+            'sfrxtgkcxd':'1',
+            'sfznkx':'0',
+            'tykczgxdcs':'10',
+            'xbm':'1',
+            'xh_id':self.user,
+            'xkly':'0',
+            'xkxnm':'2018',
+            'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
+            'xqh_id':'2',
+            'xsbj':'4294967296',
+            'xslbdm':'421',
+            'zdkxms':'0',
+            'zyfx_id':'wfx',
+            'zyh_id':'0311'         
+        }
+        search_result = requests.post(search_url, data=data, 
+                                      headers=self.header_2).json()
+        kch = search_result['tmpList'][0]['kch_id']
+        jxb = search_result['tmpList'][0]['jxb_id']
+        kcmc = search_result['tmpList'][0]['kcmc']
+        self.kcmc = kcmc
+        xf = search_result['tmpList'][0]['xf']
+        self.rob_data = {
+            'cxbj':'0',
+            'jxb_ids':jxb,
+            'kch_id':kch,
+            'kcmc':'('+self.lesson_id+')'+kcmc+'+-+'+xf+'学分',
+            'kklxdm':'10',
+            'njdm_id':'2016',
+            'qz':'0',
+            'rlkz':'1',
+            'rlzlkz':'0',
+            'rwlx':'2',
+            'sxbj':'1',
+            'xkkz_id':xkkz,
+            'xklc':'1',
+            'xkxnm':'2018',
+            'xkxqm':'3' if current_month() > 5 and current_month() < 8 else '12',
+            'xsbxfs':'0',
+            'xxkbj':'0',
+            'zyh_id':'0311'        
+        }
+        print('[+]'+logtime()+' 课程信息获取成功!')
+        #except:
+        #    print('[+]'+logtime()+' 获取失败，请查验课程代号')
+         #   _exit(-1)
             
             
     def _get_csrftoken(self):                   
