@@ -90,7 +90,8 @@ class Rob_Lessons(Loginer):
                          'id':"firstXkkzId"
                     })[0].attrs['value']
             """
-            xkkz = re.findall(r"queryCourse\(this,'10','(7ED99BFCE9D90110E053C0A86D5CA517)'\)", response.text)[0]
+            xkkz = re.findall("onclick=\"queryCourse\(this,'10','([0-9A-F]{32})'\)\" role=\"tab\" data-toggle=\"tab\">通识选修课", 
+                response.text)[0]
             data = {
                 'bh_id':'161031108',
                 'bklx_id':'0',
