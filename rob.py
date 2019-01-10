@@ -3,10 +3,7 @@ import json
 import time
 import requests
 import datetime
-<<<<<<< HEAD
-=======
 import re
->>>>>>> fix bug: 通识选修课板块代号
 
 from analoglogin.login import Loginer
 from bs4 import BeautifulSoup
