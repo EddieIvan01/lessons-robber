@@ -1,7 +1,6 @@
 """
 Asynchronous versions
 Use `asyncio` and `aiohttp` libs
-
 It has better performance with fewer system resource
 """
 
@@ -10,6 +9,7 @@ import time
 import requests
 import asyncio
 import aiohttp
+import re
 import datetime
 
 from analoglogin.login import Loginer
@@ -85,6 +85,7 @@ class Rob_Lessons(Loginer):
             if "当前不属于选课阶段" in response.text:
                 print('[!]'+logtime()+' 未到选课时间')
                 _exit(-1)
+            """
             text = BeautifulSoup(response.text, "html.parser")
             xkkz = text.findAll(name='input', 
                     attrs={
@@ -92,6 +93,8 @@ class Rob_Lessons(Loginer):
                         'name':"firstXkkzId",
                          'id':"firstXkkzId"
                     })[0].attrs['value']
+            """
+            xkkz = re.findall(r"queryCourse\(this,'10','(7ED99BFCE9D90110E053C0A86D5CA517)'\)", response.text)[0]
             data = {
                 'bh_id':'151084001',  
                 'bklx_id':'0',
@@ -139,7 +142,7 @@ class Rob_Lessons(Loginer):
                 'kch_id':kch,
                 'kcmc':'('+self.lesson_id+')'+kcmc+'+-+'+xf+'学分',
                 'kklxdm':'10',
-                'njdm_id':'2016',
+                'njdm_id':'2017',
                 'qz':'0',
                 'rlkz':'1',
                 'rlzlkz':'0',

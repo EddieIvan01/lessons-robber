@@ -3,6 +3,10 @@ import json
 import time
 import requests
 import datetime
+<<<<<<< HEAD
+=======
+import re
+>>>>>>> fix bug: 通识选修课板块代号
 
 from analoglogin.login import Loginer
 from bs4 import BeautifulSoup
@@ -77,6 +81,7 @@ class Rob_Lessons(Loginer):
             if "当前不属于选课阶段" in response.text:
                 print('[!]'+logtime()+' 未到选课时间')
                 _exit(-1)
+            """
             text = BeautifulSoup(response.text, "html.parser")
             xkkz = text.findAll(name='input', 
                     attrs={
@@ -84,6 +89,8 @@ class Rob_Lessons(Loginer):
                         'name':"firstXkkzId",
                          'id':"firstXkkzId"
                     })[0].attrs['value']
+            """
+            xkkz = re.findall(r"queryCourse\(this,'10','(7ED99BFCE9D90110E053C0A86D5CA517)'\)", response.text)[0]
             data = {
                 'bh_id':'161031108',
                 'bklx_id':'0',
