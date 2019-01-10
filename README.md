@@ -2,7 +2,7 @@
 
 ### NOTICE!!!
 
-2019/1/8 Add co-routine asynchronous I/O version, it has better performance with fewer resource
+2019/1/8 Add co-routine asynchronous I/O version, it has better performance with fewer resource (35 times per second)
 
 2019/1/9 已验证具有不同年级不同专业的普适性，可放心使用
 
