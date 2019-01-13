@@ -1,5 +1,18 @@
 ## CUMT多线程公选课抢课脚本
 
+### 免责声明
+
++ 作者本人已修够所需公选学分，开源此程序只为技术交流，无任何盈利行为
+
++ **请勿**将此程序用于恶意抢课盈利行为，恶意黄牛行为造成的后果本人**概不负责**
+
++ 下载并使用本仓库程序则代表您**自愿承担一切责任**
+
++ 如您对此免责声明**有异议**，请勿使用本程序
+
+
+***
+
 ### NOTICE!!!
 
 2019/1/8 Add co-routine asynchronous I/O version, it has better performance with fewer resource (35 times per second)
